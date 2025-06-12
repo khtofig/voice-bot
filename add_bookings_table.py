@@ -3,6 +3,7 @@ import sqlite3
 conn = sqlite3.connect('restaurant.db')
 cursor = conn.cursor()
 
+#test
 # Создаем таблицу бронирований
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS bookings (
