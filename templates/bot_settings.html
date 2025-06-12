@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Настройки бота{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-gradient text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-robot me-2"></i>Настройки AI-бота
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-4">
+                        <label for="greeting_message" class="form-label">
+                            <i class="fas fa-comment me-2"></i>Приветственное сообщение
+                        </label>
+                        <textarea class="form-control" id="greeting_message" name="greeting_message" 
+                                  rows="3" placeholder="Здравствуйте! Вас приветствует ресторан..." required>{{ bot.greeting_message }}</textarea>
+                        <div class="form-text">Это сообщение бот будет говорить при ответе на звонок</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="ai_personality" class="form-label">
+                            <i class="fas fa-brain me-2"></i>Личность и инструкции для AI
+                        </label>
+                        <textarea class="form-control" id="ai_personality" name="ai_personality" 
+                                  rows="10" placeholder="Ты - дружелюбный помощник ресторана..." required>{{ bot.ai_personality }}</textarea>
+                        <div class="form-text">
+                            Опишите как должен вести себя бот: тон общения, стиль ответов, особые инструкции.
+                            Например: "Ты вежливый администратор ресторана. Всегда предлагай забронировать столик."
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Сохранить настройки
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Назад на главную
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Предварительный просмотр -->
+        <div class="card mt-4">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                    <i class="fas fa-eye me-2"></i>Как это будет работать
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-phone me-2"></i>Пример звонка:</h6>
+                    <p class="mb-2"><strong>Клиент:</strong> "Алло, можно забронировать столик?"</p>
+                    <p class="mb-2"><strong>Бот:</strong> "{{ bot.greeting_message }}"</p>
+                    <p class="mb-0"><strong>Бот:</strong> <em>(далее отвечает согласно настройкам личности)</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

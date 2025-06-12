@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать столик{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-gradient text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-edit me-2"></i>Редактировать столик №{{ table.number }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="table_number" class="form-label">
+                            <i class="fas fa-hashtag me-2"></i>Номер столика
+                        </label>
+                        <input type="text" class="form-control" id="table_number" name="table_number" 
+                               value="{{ table.number }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="seats_count" class="form-label">
+                            <i class="fas fa-users me-2"></i>Количество мест
+                        </label>
+                        <input type="number" class="form-control" id="seats_count" name="seats_count" 
+                               min="1" max="20" value="{{ table.seats }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="location_type" class="form-label">
+                            <i class="fas fa-map-marker-alt me-2"></i>Тип расположения
+                        </label>
+                        <select class="form-select" id="location_type" name="location_type" required>
+                            <option value="window" {% if table.location == 'window' %}selected{% endif %}>🪟 У окна</option>
+                            <option value="center" {% if table.location == 'center' %}selected{% endif %}>🏢 Центр зала</option>
+                            <option value="vip" {% if table.location == 'vip' %}selected{% endif %}>⭐ VIP зона</option>
+                            <option value="stage" {% if table.location == 'stage' %}selected{% endif %}>🎵 У сцены</option>
+                            <option value="quiet" {% if table.location == 'quiet' %}selected{% endif %}>🤫 Тихая зона</option>
+                            <option value="bar" {% if table.location == 'bar' %}selected{% endif %}>🍺 У бара</option>
+                            <option value="terrace" {% if table.location == 'terrace' %}selected{% endif %}>🌿 Терраса</option>
+                            <option value="banquet" {% if table.location == 'banquet' %}selected{% endif %}>🍽️ Банкетный зал</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            <i class="fas fa-info-circle me-2"></i>Описание
+                        </label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  rows="3">{{ table.description }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="status" class="form-label">
+                            <i class="fas fa-toggle-on me-2"></i>Статус
+                        </label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="active" {% if table.status == 'active' %}selected{% endif %}>✅ Активен</option>
+                            <option value="maintenance" {% if table.status == 'maintenance' %}selected{% endif %}>🔧 На обслуживании</option>
+                            <option value="reserved" {% if table.status == 'reserved' %}selected{% endif %}>🔒 Зарезервирован</option>
+                            <option value="inactive" {% if table.status == 'inactive' %}selected{% endif %}>❌ Неактивен</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Сохранить изменения
+                        </button>
+                        <a href="{{ url_for('tables_list') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Назад к столикам
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

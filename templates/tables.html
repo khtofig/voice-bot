@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Управление столиками{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-table me-2"></i>Управление столиками</h2>
+    <a href="{{ url_for('add_table') }}" class="btn btn-success">
+        <i class="fas fa-plus me-2"></i>Добавить столик
+    </a>
+</div>
+
+{% if tables_by_location %}
+    {% for location, tables in tables_by_location.items() %}
+        <div class="card mb-4">
+            <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h5 class="mb-0 text-white">
+                    {% if location == 'window' %}<i class="fas fa-window-maximize me-2"></i>Столики у окна
+                    {% elif location == 'vip' %}<i class="fas fa-star me-2"></i>VIP зона
+                    {% elif location == 'stage' %}<i class="fas fa-music me-2"></i>У сцены
+                    {% elif location == 'quiet' %}<i class="fas fa-volume-down me-2"></i>Тихая зона
+                    {% elif location == 'bar' %}<i class="fas fa-glass-martini-alt me-2"></i>У бара
+                    {% elif location == 'center' %}<i class="fas fa-circle me-2"></i>Центр зала
+                    {% elif location == 'terrace' %}<i class="fas fa-leaf me-2"></i>Терраса
+                    {% elif location == 'banquet' %}<i class="fas fa-utensils me-2"></i>Банкетный зал
+                    {% else %}<i class="fas fa-map-marker-alt me-2"></i>{{ location.title() }}
+                    {% endif %}
+                    <span class="badge bg-light text-dark ms-2">{{ tables|length }} столиков</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for table in tables %}
+                        <div class="col-md-4 col-lg-3 mb-3">
+                            <div class="card table-card h-100 {% if table.status == 'active' %}border-success{% else %}border-warning{% endif %}">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title" style="color: #333; font-weight: bold;">
+                                        <i class="fas fa-chair me-2 text-primary"></i>Столик #{{ table.number }}
+                                    </h5>
+                                    
+                                    <div class="mb-2">
+                                        <span class="badge bg-primary">
+                                            <i class="fas fa-users me-1"></i>{{ table.seats }} мест
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        {% if table.status == 'active' %}
+                                            <span class="badge bg-success"><i class="fas fa-check me-1"></i>Активен</span>
+                                        {% elif table.status == 'maintenance' %}
+                                            <span class="badge bg-warning"><i class="fas fa-tools me-1"></i>Обслуживание</span>
+                                        {% elif table.status == 'reserved' %}
+                                            <span class="badge bg-info"><i class="fas fa-lock me-1"></i>Зарезервирован</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary"><i class="fas fa-times me-1"></i>{{ table.status }}</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% if table.description %}
+                                        <p class="card-text small text-muted">{{ table.description }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="btn-group w-100">
+                                        <a href="{{ url_for('edit_table', table_id=table.id) }}" 
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-edit me-1"></i>Изменить
+                                        </a>
+                                        <a href="{{ url_for('delete_table', table_id=table.id) }}" 
+                                           class="btn btn-outline-danger btn-sm"
+                                           onclick="return confirm('Удалить столик #{{ table.number }}?')">
+                                            <i class="fas fa-trash me-1"></i>Удалить
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="card">
+        <div class="card-body text-center">
+            <i class="fas fa-table fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Столики не добавлены</h5>
+            <p class="text-muted">Добавьте первый столик для вашего ресторана</p>
+            <a href="{{ url_for('add_table') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Добавить первый столик
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Статистика ТЕПЕРЬ БЕРЕТСЯ ИЗ PYTHON -->
+<div class="card">
+    <div class="card-header bg-info text-white">
+        <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Статистика столиков</h6>
+    </div>
+    <div class="card-body">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-light">
+                    <h4 class="text-primary mb-1"><i class="fas fa-table me-2"></i>{{ stats.total_tables }}</h4>
+                    <small class="text-muted">Всего столиков</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-light">
+                    <h4 class="text-success mb-1"><i class="fas fa-users me-2"></i>{{ stats.total_seats }}</h4>
+                    <small class="text-muted">Всего мест</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-light">
+                    <h4 class="text-info mb-1"><i class="fas fa-map me-2"></i>{{ stats.total_locations }}</h4>
+                    <small class="text-muted">Зон размещения</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-light">
+                    <h4 class="text-warning mb-1"><i class="fas fa-calculator me-2"></i>{{ stats.average_seats }}</h4>
+                    <small class="text-muted">Среднее мест/столик</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Быстрые действия -->
+<div class="card">
+    <div class="card-header bg-secondary text-white">
+        <h6 class="mb-0"><i class="fas fa-lightning-bolt me-2"></i>Быстрые действия</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{{ url_for('add_table') }}" class="btn btn-success w-100 mb-2">
+                    <i class="fas fa-plus me-2"></i>Добавить новый столик
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('bookings_list') }}" class="btn btn-primary w-100 mb-2">
+                    <i class="fas fa-calendar-check me-2"></i>Посмотреть бронирования
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Легенда типов столиков -->
+<div class="card">
+    <div class="card-header bg-dark text-white">
+        <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Типы расположения столиков</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <span class="badge bg-primary text-white p-2">
+                    <i class="fas fa-window-maximize me-1"></i>У окна
+                </span>
+            </div>
+            <div class="col-md-3 mb-2">
+                <span class="badge bg-warning text-dark p-2">
+                    <i class="fas fa-star me-1"></i>VIP зона
+                </span>
+            </div>
+            <div class="col-md-3 mb-2">
+                <span class="badge bg-info text-white p-2">
+                    <i class="fas fa-music me-1"></i>У сцены
+                </span>
+            </div>
+            <div class="col-md-3 mb-2">
+                <span class="badge bg-success text-white p-2">
+                    <i class="fas fa-volume-down me-1"></i>Тихая зона
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <span class="badge bg-danger text-white p-2">
+                    <i class="fas fa-glass-martini-alt me-1"></i>У бара
+                </span>
+            </div>
+            <div class="col-md-3 mb-2">
+                <span class="badge bg-secondary text-white p-2">
+                    <i class="fas fa-circle me-1"></i>Центр зала
+                </span>
+            </div>
+            <div class="col-md-3 mb-2">
+                <span class="badge bg-success text-white p-2">
+                    <i class="fas fa-leaf me-1"></i>Терраса
+                </span>
+            </div>
+            <div class="col-md-3 mb-2">
+                <span class="badge bg-dark text-white p-2">
+                    <i class="fas fa-utensils me-1"></i>Банкетный зал
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

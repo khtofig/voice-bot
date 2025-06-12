@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Управление меню{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-utensils me-2"></i>Управление меню</h2>
+    <a href="{{ url_for('add_menu_item') }}" class="btn btn-success">
+        <i class="fas fa-plus me-2"></i>Добавить блюдо
+    </a>
+</div>
+
+{% if menu_by_category %}
+    {% for category, items in menu_by_category.items() %}
+        <div class="card mb-4">
+            <div class="card-header bg-gradient text-white">
+                <h5 class="mb-0">🍽️ {{ category }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for item in items %}
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="text-primary">{{ item.name }}</h6>
+                                        <p class="text-muted small mb-2">{{ item.description }}</p>
+                                        <strong class="text-success">{{ item.price }}₽</strong>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('edit_menu_item', item_name=item.name) }}" 
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ url_for('delete_menu_item', item_name=item.name) }}" 
+                                           class="btn btn-outline-danger btn-sm"
+                                           onclick="return confirm('Удалить {{ item.name }}?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="card">
+        <div class="card-body text-center">
+            <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Меню пока пустое</h5>
+            <p class="text-muted">Добавьте первое блюдо в ваше меню</p>
+            <a href="{{ url_for('add_menu_item') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Добавить блюдо
+            </a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

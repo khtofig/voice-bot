@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Бронирования{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-calendar-check me-2"></i>Бронирования</h2>
+    <div class="btn-group">
+        <button class="btn btn-outline-primary active" onclick="filterBookings('все')">Все</button>
+        <button class="btn btn-outline-success" onclick="filterBookings('новое')">Новые</button>
+        <button class="btn btn-outline-info" onclick="filterBookings('подтверждено')">Подтвержденные</button>
+        <button class="btn btn-outline-warning" onclick="filterBookings('отменено')">Отмененные</button>
+    </div>
+</div>
+
+{% if bookings %}
+    <div class="row">
+        {% for booking in bookings %}
+            <div class="col-md-6 mb-3 booking-card" data-status="{{ booking[6] }}">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="fas fa-user me-2"></i>{{ booking[1] }}
+                        </h6>
+                        <span class="badge bg-{% if booking[6] == 'новое' %}warning{% elif booking[6] == 'подтверждено' %}success{% elif booking[6] == 'отменено' %}danger{% else %}secondary{% endif %}">
+                            {{ booking[6] }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <small class="text-muted">📱 Телефон:</small><br>
+                                <strong>{{ booking[2] }}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">👥 Гостей:</small><br>
+                                <strong>{{ booking[5] }} чел.</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <small class="text-muted">📅 Дата:</small><br>
+                                <strong>{{ booking[3] }}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">🕒 Время:</small><br>
+                                <strong>{{ booking[4] }}</strong>
+                            </div>
+                        </div>
+                        
+                        <!-- НОВОЕ: Информация о столике -->
+                        {% if booking[10] %}
+                            <div class="row mb-2">
+                                <div class="col-12">
+                                    <small class="text-muted">📍 Столик:</small><br>
+                                    <span class="badge bg-primary">
+                                        #{{ booking[10] }}
+                                        {% if booking[11] %}
+                                            {% if booking[11] == 'window' %}🪟 У окна
+                                            {% elif booking[11] == 'vip' %}⭐ VIP
+                                            {% elif booking[11] == 'stage' %}🎵 У сцены
+                                            {% elif booking[11] == 'quiet' %}🤫 Тихая зона
+                                            {% elif booking[11] == 'bar' %}🍺 У бара
+                                            {% elif booking[11] == 'center' %}🏢 Центр
+                                            {% elif booking[11] == 'terrace' %}🌿 Терраса
+                                            {% elif booking[11] == 'banquet' %}🍽️ Банкет
+                                            {% else %}{{ booking[11] }}
+                                            {% endif %}
+                                        {% endif %}
+                                    </span>
+                                    {% if booking[12] %}
+                                        <small class="text-muted d-block">({{ booking[12] }} мест)</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="row mb-2">
+                                <div class="col-12">
+                                    <small class="text-muted">📍 Столик:</small><br>
+                                    <span class="badge bg-secondary">Не назначен</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if booking[7] %}
+                            <div class="mb-2">
+                                <small class="text-muted">📝 Заметки:</small><br>
+                                <em>{{ booking[7] }}</em>
+                            </div>
+                        {% endif %}
+
+                        {% if booking[9] %}
+                            <div class="mb-2">
+                                <small class="text-muted">🎯 Особые пожелания:</small><br>
+                                <em>{{ booking[9] }}</em>
+                            </div>
+                        {% endif %}
+                        
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>Создано: {{ booking[8][:16] }}
+                        </small>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="btn-group w-100">
+                            {% if booking[6] == 'новое' %}
+                                <a href="{{ url_for('update_booking_status', booking_id=booking[0], new_status='подтверждено') }}" 
+                                   class="btn btn-success btn-sm">
+                                    <i class="fas fa-check me-1"></i>Подтвердить
+                                </a>
+                                <a href="{{ url_for('update_booking_status', booking_id=booking[0], new_status='отменено') }}" 
+                                   class="btn btn-danger btn-sm">
+                                    <i class="fas fa-times me-1"></i>Отменить
+                                </a>
+                            {% elif booking[6] == 'подтверждено' %}
+                                <a href="{{ url_for('update_booking_status', booking_id=booking[0], new_status='отменено') }}" 
+                                   class="btn btn-danger btn-sm">
+                                    <i class="fas fa-times me-1"></i>Отменить
+                                </a>
+                                <button class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-phone me-1"></i>Позвонить
+                                </button>
+                            {% elif booking[6] == 'отменено' %}
+                                <a href="{{ url_for('update_booking_status', booking_id=booking[0], new_status='подтверждено') }}" 
+                                   class="btn btn-success btn-sm">
+                                    <i class="fas fa-undo me-1"></i>Восстановить
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card">
+        <div class="card-body text-center">
+            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Бронирований пока нет</h5>
+            <p class="text-muted">Когда клиенты начнут звонить боту, их бронирования появятся здесь</p>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+function filterBookings(status) {
+    const cards = document.querySelectorAll('.booking-card');
+    const buttons = document.querySelectorAll('.btn-group .btn');
+    
+    // Убираем активный класс со всех кнопок
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    // Добавляем активный класс на нажатую кнопку
+    event.target.classList.add('active');
+    
+    cards.forEach(card => {
+        const cardStatus = card.getAttribute('data-status');
+        if (status === 'все' || cardStatus === status) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать блюдо{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-gradient text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-edit me-2"></i>Редактировать блюдо
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="category" class="form-label">
+                            <i class="fas fa-tags me-2"></i>Категория
+                        </label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="Салаты" {% if item.category == 'Салаты' %}selected{% endif %}>🥗 Салаты</option>
+                            <option value="Супы" {% if item.category == 'Супы' %}selected{% endif %}>🍲 Супы</option>
+                            <option value="Горячие блюда" {% if item.category == 'Горячие блюда' %}selected{% endif %}>🍖 Горячие блюда</option>
+                            <option value="Паста" {% if item.category == 'Паста' %}selected{% endif %}>🍝 Паста</option>
+                            <option value="Пицца" {% if item.category == 'Пицца' %}selected{% endif %}>🍕 Пицца</option>
+                            <option value="Десерты" {% if item.category == 'Десерты' %}selected{% endif %}>🍰 Десерты</option>
+                            <option value="Напитки" {% if item.category == 'Напитки' %}selected{% endif %}>🥤 Напитки</option>
+                            <option value="Другое" {% if item.category == 'Другое' %}selected{% endif %}>📋 Другое</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="fas fa-utensils me-2"></i>Название блюда
+                        </label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               value="{{ item.name }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            <i class="fas fa-info-circle me-2"></i>Описание
+                        </label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  rows="3">{{ item.description }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="price" class="form-label">
+                            <i class="fas fa-ruble-sign me-2"></i>Цена (₽)
+                        </label>
+                        <input type="number" class="form-control" id="price" name="price" 
+                               step="0.01" min="0" value="{{ item.price }}" required>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Сохранить изменения
+                        </button>
+                        <a href="{{ url_for('menu_list') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Назад к меню
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

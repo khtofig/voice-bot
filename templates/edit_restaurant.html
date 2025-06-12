@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать ресторан{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-gradient text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-edit me-2"></i>Редактировать информацию о ресторане
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_restaurant') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="fas fa-store me-2"></i>Название ресторана
+                        </label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               value="{{ restaurant.name }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">
+                            <i class="fas fa-phone me-2"></i>Телефон
+                        </label>
+                        <input type="text" class="form-control" id="phone" name="phone" 
+                               value="{{ restaurant.phone }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address" class="form-label">
+                            <i class="fas fa-map-marker-alt me-2"></i>Адрес
+                        </label>
+                        <input type="text" class="form-control" id="address" name="address" 
+                               value="{{ restaurant.address }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="working_hours" class="form-label">
+                            <i class="fas fa-clock me-2"></i>Часы работы
+                        </label>
+                        <input type="text" class="form-control" id="working_hours" name="working_hours" 
+                               value="{{ restaurant.working_hours }}" required>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Сохранить изменения
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

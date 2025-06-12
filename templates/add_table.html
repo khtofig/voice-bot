@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить столик{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-gradient text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-plus me-2"></i>Добавить новый столик
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="table_number" class="form-label">
+                            <i class="fas fa-hashtag me-2"></i>Номер столика
+                        </label>
+                        <input type="text" class="form-control" id="table_number" name="table_number" 
+                               placeholder="1" required>
+                        <div class="form-text">Уникальный номер столика</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="seats_count" class="form-label">
+                            <i class="fas fa-users me-2"></i>Количество мест
+                        </label>
+                        <input type="number" class="form-control" id="seats_count" name="seats_count" 
+                               min="1" max="20" placeholder="4" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="location_type" class="form-label">
+                            <i class="fas fa-map-marker-alt me-2"></i>Тип расположения
+                        </label>
+                        <select class="form-select" id="location_type" name="location_type" required>
+                            <option value="">Выберите расположение</option>
+                            <option value="window">🪟 У окна</option>
+                            <option value="center">🏢 Центр зала</option>
+                            <option value="vip">⭐ VIP зона</option>
+                            <option value="stage">🎵 У сцены</option>
+                            <option value="quiet">🤫 Тихая зона</option>
+                            <option value="bar">🍺 У бара</option>
+                            <option value="terrace">🌿 Терраса</option>
+                            <option value="banquet">🍽️ Банкетный зал</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            <i class="fas fa-info-circle me-2"></i>Описание
+                        </label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  rows="3" placeholder="Уютный столик с видом на улицу..."></textarea>
+                        <div class="form-text">Краткое описание для клиентов</div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Добавить столик
+                        </button>
+                        <a href="{{ url_for('tables_list') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Назад к столикам
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Подсказка -->
+        <div class="card mt-4">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Рекомендации</h6>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li><strong>Номер столика:</strong> Используйте последовательную нумерацию (1, 2, 3...)</li>
+                    <li><strong>Расположение:</strong> Группируйте столики логично по зонам</li>
+                    <li><strong>Описание:</strong> Указывайте особенности, которые важны клиентам</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

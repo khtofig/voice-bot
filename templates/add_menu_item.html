@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить блюдо{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-gradient text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-plus me-2"></i>Добавить новое блюдо
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="category" class="form-label">
+                            <i class="fas fa-tags me-2"></i>Категория
+                        </label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="">Выберите категорию</option>
+                            <option value="Салаты">🥗 Салаты</option>
+                            <option value="Супы">🍲 Супы</option>
+                            <option value="Горячие блюда">🍖 Горячие блюда</option>
+                            <option value="Паста">🍝 Паста</option>
+                            <option value="Пицца">🍕 Пицца</option>
+                            <option value="Десерты">🍰 Десерты</option>
+                            <option value="Напитки">🥤 Напитки</option>
+                            <option value="Другое">📋 Другое</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="fas fa-utensils me-2"></i>Название блюда
+                        </label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               placeholder="Например: Цезарь с курицей" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            <i class="fas fa-info-circle me-2"></i>Описание
+                        </label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  rows="3" placeholder="Описание ингредиентов и способа приготовления"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="price" class="form-label">
+                            <i class="fas fa-ruble-sign me-2"></i>Цена (₽)
+                        </label>
+                        <input type="number" class="form-control" id="price" name="price" 
+                               step="0.01" min="0" placeholder="350.00" required>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Добавить блюдо
+                        </button>
+                        <a href="{{ url_for('menu_list') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Назад к меню
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
